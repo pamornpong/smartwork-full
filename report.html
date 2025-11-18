@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>บันทึกข้อความ - SMARTWORK</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @page {
+        size: A4;
+        margin: 2.54cm;
+      }
+      body {
+        font-family: "TH Sarabun New", "Sarabun", sans-serif;
+        font-size: 16pt;
+        line-height: 1.5;
+        color: #000;
+        max-width: 21cm;
+        margin: auto;
+      }
+      table.header-table {
+        width: 100%;
+      }
+      table.header-table td {
+        vertical-align: middle;
+      }
+      .garuda-cell {
+        width: 20%;
+        text-align: left;
+      }
+      .title-cell {
+        width: 80%;
+        text-align: center;
+      }
+      .garuda {
+        height: 2.5cm;
+        width: auto;
+      }
+      h1 {
+        font-size: 20pt;
+        font-weight: 700;
+        margin: 0;
+      }
+      section p {
+        margin: 0.3em 0;
+      }
+      .signature-block {
+        margin-top: 1.5em;
+        text-align: center;
+      }
+      .dotted-lines {
+        line-height: 1.5;
+        text-align: center;
+        font-size: 16pt;
+        margin-bottom: 0.5em;
+      }
+      button#printBtn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #122058;
+        color: #fff;
+        border: none;
+        padding: 0.4em 0.8em;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      @media print {
+        #printBtn {
+          display: none;
+        }
+      }
+      .image-row {
+        margin-top: 1em;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      .image-row img {
+        width: 48%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #888;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="printBtn" onclick="window.print()">พิมพ์รายงาน (PDF)</button>
+
+    <table class="header-table">
+      <tr>
+        <td class="garuda-cell">
+          <img src="ตราครุฑ-PNG0.webp" class="garuda" alt="ตราครุฑ" />
+        </td>
+        <td class="title-cell">
+          <h1>บันทึกข้อความ</h1>
+        </td>
+      </tr>
+    </table>
+
+    <section id="metaSection">
+      <p id="metaOffice">
+        <strong>ส่วนราชการ:</strong>
+        ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอศิลาลาด
+        สำนักงานส่งเสริมการเรียนรู้ประจำจังหวัดศรีสะเกษ
+      </p>
+      <p id="metaCodeDate">
+        <strong>ที่:</strong> ศธ 07085.xx/………. &nbsp;&nbsp;&nbsp;&nbsp;
+        <strong>วันที่:</strong> <span id="docDate"></span>
+      </p>
+      <p id="metaSubject">
+        <strong>เรื่อง:</strong> รายงานผลการดำเนินงานประจำเดือน
+      </p>
+      <p id="metaTo">
+        <strong>เรียน:</strong>
+        ผู้อำนวยการศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอศิลาลาด
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="bodySection">
+      <p id="paragraph1" style="text-indent: 2.5em">
+        ด้วยข้าพเจ้า <strong id="staffName">...</strong> ตำแหน่ง
+        <strong id="staffPos">...</strong>
+        ได้ดำเนินงานตามภารกิจของหน่วยงานในเดือนนี้
+        เป็นไปตามแผนปฏิบัติราชการประจำปีงบประมาณ พ.ศ. 2568 ดังนี้
+      </p>
+
+      <p id="workDetail" style="text-indent: 2.5em"></p>
+
+      <p id="paragraph2" style="text-indent: 2.5em">
+        ตัวชี้วัดที่เกี่ยวข้อง:
+        <span id="indicatorText"></span>
+      </p>
+
+      <p id="workLink" style="text-indent: 2.5em"></p>
+
+      <p style="text-indent: 2.5em">จึงเรียนมาเพื่อโปรดทราบ</p>
+
+      <div class="image-row" id="imageRow" style="display: none">
+        <img id="img1" alt="ภาพกิจกรรม 1" />
+        <img id="img2" alt="ภาพกิจกรรม 2" />
+      </div>
+    </section>
+
+    <div class="signature-block">
+      <div style="height: 60px"></div>
+      <div id="signStaffName">(ชื่อผู้รายงาน)</div>
+      <div id="signStaffPos">ตำแหน่ง</div>
+    </div>
+
+    <div class="signature-block">
+      <div style="height: 60px"></div>
+      <div id="signTeacher">(ครูผู้รับรอง)</div>
+      <div>ครู</div>
+    </div>
+
+    <div class="signature-block">
+      <strong>ความเห็นของผู้อำนวยการสถานศึกษา</strong><br /><br />
+      <div class="dotted-lines">
+        ................................................................................................<br />
+        .................................................................................................
+      </div>
+      <br />
+      <span id="signDirector">(ชื่อผู้อำนวยการ)</span><br />
+      ผู้อำนวยการศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอ
+      <span id="directorDistrict"></span>
+    </div>
+
+    <script>
+      function formatThaiDate(dateStr) {
+        if (!dateStr) return "";
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return "";
+        const months = [
+          "มกราคม",
+          "กุมภาพันธ์",
+          "มีนาคม",
+          "เมษายน",
+          "พฤษภาคม",
+          "มิถุนายน",
+          "กรกฎาคม",
+          "สิงหาคม",
+          "กันยายน",
+          "ตุลาคม",
+          "พฤศจิกายน",
+          "ธันวาคม",
+        ];
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const year = d.getFullYear() + 543;
+        return day + " " + month + " " + year;
+      }
+
+      const cfgText = localStorage.getItem("SMARTWORK_CONFIG") || "{}";
+      const cfg = JSON.parse(cfgText);
+
+      const itemText =
+        localStorage.getItem("REPORT_ITEM") ||
+        localStorage.getItem("LATEST_WORK") ||
+        "{}";
+      const item = JSON.parse(itemText);
+
+      // ส่วนหัว
+      const district = cfg.district || "ศิลาลาด";
+      const amphurCode = cfg.amphurCode || "07085.xx";
+      document.getElementById("metaOffice").innerHTML =
+        "<strong>ส่วนราชการ:</strong> ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอ" +
+        district +
+        " สำนักงานส่งเสริมการเรียนรู้ประจำจังหวัดศรีสะเกษ";
+      document.getElementById("metaCodeDate").innerHTML =
+        "<strong>ที่:</strong> ศธ " +
+        amphurCode +
+        "/………. &nbsp;&nbsp;&nbsp;&nbsp; <strong>วันที่:</strong> <span id='docDate'></span>";
+
+      const dateToUse = item.workDate || new Date().toISOString().slice(0, 10);
+      document.getElementById("docDate").textContent =
+        formatThaiDate(dateToUse);
+
+      document.getElementById("staffName").textContent =
+        cfg.fullname || "(ชื่อ – สกุล)";
+      document.getElementById("staffPos").textContent =
+        cfg.position || "(ตำแหน่ง)";
+
+      // รายละเอียดงาน
+      let detailText = "";
+      if (item.title) {
+        detailText += "ชื่องาน: " + item.title + " ";
+      }
+      if (item.detail) {
+        detailText += "รายละเอียด: " + item.detail;
+      }
+      document.getElementById("workDetail").textContent = detailText;
+      document.getElementById("indicatorText").textContent =
+        item.indicator || "-";
+
+      const linkP = document.getElementById("workLink");
+      if (item.url) {
+        linkP.innerHTML =
+          'ลิงก์ผลงาน: <a href="' +
+          item.url +
+          '" target="_blank">' +
+          item.url +
+          "</a>";
+      }
+
+      // รูป 2 รูป
+      const pics = item.pics || [];
+      if (pics.length) {
+        document.getElementById("imageRow").style.display = "flex";
+        document.getElementById("img1").src = pics[0];
+        if (pics[1]) {
+          document.getElementById("img2").src = pics[1];
+        } else {
+          document.getElementById("img2").style.display = "none";
+        }
+      }
+
+      // ลายเซ็น
+      document.getElementById("signStaffName").textContent =
+        "(" + (cfg.fullname || "........................") + ")";
+      document.getElementById("signStaffPos").textContent =
+        cfg.position || "ตำแหน่ง .....................................";
+
+      document.getElementById("signTeacher").textContent =
+        "(นายสุริยะ บุญศักดิ์)"; // ถ้าพี่อยากให้แก้เป็น dynamic ไว้ขั้นถัดไปก็ได้
+
+      document.getElementById("signDirector").textContent =
+        "(" + (cfg.amphurDirector || "ผู้อำนวยการ") + ")";
+      document.getElementById("directorDistrict").textContent = district;
+    </script>
+  </body>
+</html>
