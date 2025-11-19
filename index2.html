@@ -1,1 +1,452 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SMARTWORK – รายการผลงานทั้งหมด ฺBy..JES</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      body {
+        font-family: "TH Sarabun New", "Sarabun", sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding: 15px;
+      }
+      .topbar {
+        max-width: 1100px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .profile img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ccc;
+      }
+      .profile-info {
+        font-size: 16px;
+      }
+      .title-block h2 {
+        margin: 0;
+        font-size: 28px;
+        text-align: right;
+      }
+      .title-block .note {
+        font-size: 15px;
+        color: #555;
+        text-align: right;
+      }
+      .filter-bar {
+        max-width: 1100px;
+        margin: 15px auto 5px auto;
+        display: grid;
+        grid-template-columns: 1.6fr 1.2fr 1.2fr;
+        gap: 10px;
+      }
+      .filter-bar input,
+      .filter-bar select {
+        padding: 6px 8px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+      }
+      .suggest-box {
+        max-width: 1100px;
+        margin: 0 auto 5px auto;
+        font-size: 16px;
+      }
+      .suggest-item {
+        display: inline-block;
+        background: #e9f2ff;
+        padding: 2px 6px;
+        margin-right: 4px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-bottom: 4px;
+      }
+      .grid {
+        max-width: 1100px;
+        margin: 10px auto 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .card:hover {
+        transform: scale(1.02);
+      }
+      .thumb {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .meta {
+        font-size: 16px;
+        color: #444;
+        margin-top: 3px;
+      }
+      .modal-bg {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        z-index: 1000;
+      }
+      .modal-box {
+        background: #fff;
+        border-radius: 12px;
+        max-width: 900px;
+        width: 100%;
+        padding: 20px;
+        max-height: 90%;
+        overflow-y: auto;
+      }
+      .gallery img {
+        width: 140px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 8px;
+        cursor: pointer;
+        margin-bottom: 5px;
+      }
+      .closeBtn {
+        background: #d33;
+        color: #fff;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 8px;
+        float: right;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .modal-footer-btns {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+      .btn-report {
+        background: #1e4bb8;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .btn-back {
+        background: #0a7b34;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .pagination {
+        max-width: 1100px;
+        margin: 15px auto;
+        text-align: center;
+        font-size: 18px;
+      }
+      .pagination button {
+        margin: 0 3px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid #888;
+        cursor: pointer;
+        background: #fff;
+      }
+      .pagination button.active {
+        background: #1e4bb8;
+        color: #fff;
+      }
+      footer {
+        max-width: 1100px;
+        margin: 10px auto 0 auto;
+        text-align: right;
+        font-size: 14px;
+        color: #777;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- TOP PROFILE BAR -->
+    <div class="topbar">
+      <div class="profile">
+        <img id="avatarProfile" src="https://via.placeholder.com/60x60?text=Avatar" />
+        <div class="profile-info" id="profileInfo"></div>
+      </div>
+
+      <div class="title-block">
+        <h2>รายการผลงานทั้งหมด (SMARTWORK) by JES</h2>
+        <div class="note">ดึงข้อมูลจาก Google Sheet ผ่าน Google Apps Script</div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="ค้นหาจากชื่อกิจกรรม/รายละเอียด/ลิงก์..." />
+      <select id="indicatorFilter">
+        <option value="">— ตัวชี้วัดทั้งหมด —</option>
+        <option value="1)">1) จัดการเรียนรู้ตามหลักสูตร</option>
+        <option value="2)">2) ส่งเสริมสนับสนุนการเรียนรู้</option>
+        <option value="3)">3) นิเทศ กำกับ ติดตาม</option>
+        <option value="4)">4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย</option>
+      </select>
+      <button onclick="location.href='form.html'"
+        style="font-size: 18px; border-radius: 8px; border: none; background: #0a7b34; color: #fff; cursor: pointer;">
+        + บันทึกผลงานใหม่
+      </button>
+    </div>
+
+    <div class="suggest-box" id="suggestBox"></div>
+
+    <!-- GRID -->
+    <div id="grid" class="grid"></div>
+
+    <div class="pagination" id="pagination"></div>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal-bg">
+      <div class="modal-box">
+        <button class="closeBtn" onclick="closeModal()">ปิด</button>
+        <h3 id="m_title"></h3>
+        <p id="m_indicator"></p>
+        <p id="m_date"></p>
+        <p id="m_detail"></p>
+        <p id="m_url"></p>
+        <div id="m_gallery" class="gallery"></div>
+
+        <div class="modal-footer-btns">
+          <button class="btn-report" onclick="goReportFromModal()">ออกบันทึกข้อความจากงานนี้</button>
+          <button class="btn-back" onclick="closeModal()">ปิดหน้าต่าง</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>SMARTWORK – Personal Portfolio &amp; Report System</footer>
+
+    <script>
+      /* URL ของ Web App (proxy รูป + API ทั้งหมด) */
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
+
+      const cfgText = localStorage.getItem("SMARTWORK_CONFIG") || "{}";
+      const cfg = JSON.parse(cfgText);
+
+      // PROFILE
+      const profileInfo = document.getElementById("profileInfo");
+      profileInfo.innerHTML =
+        "<strong>" +
+        (cfg.fullname || "-") +
+        "</strong><br>" +
+        (cfg.position || "") +
+        "<br>สกร.อ." +
+        (cfg.district || "") +
+        " สำนักงานส่งเสริมการเรียนรู้ประจำจังหวัดศรีสะเกษ";
+
+      if (cfg.avatarDataUrl) {
+        document.getElementById("avatarProfile").src = cfg.avatarDataUrl;
+      }
+
+      let allData = [];
+      let filteredData = [];
+      let currentPage = 1;
+      const PER_PAGE = 9;
+      let currentItem = null;
+
+      async function loadData() {
+        try {
+          const res = await fetch(SCRIPT_URL);
+          const data = await res.json();
+          allData = data || [];
+          filteredData = allData.slice();
+          render();
+          buildSuggest();
+        } catch (err) {
+          Swal.fire("ผิดพลาด", "โหลดข้อมูลไม่สำเร็จ", "error");
+        }
+      }
+
+      function applyFilter() {
+        const q = document.getElementById("searchInput").value.toLowerCase().trim();
+        const ind = document.getElementById("indicatorFilter").value;
+
+        filteredData = allData.filter((item) => {
+          let ok = true;
+          if (q) {
+            const text =
+              (item.title || "") + " " + (item.detail || "") + " " + (item.url || "");
+            if (!text.toLowerCase().includes(q)) ok = false;
+          }
+          if (ind) {
+            if (!item.indicator || !item.indicator.startsWith(ind)) ok = false;
+          }
+          return ok;
+        });
+
+        currentPage = 1;
+        render();
+      }
+
+      function render() {
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+
+        if (!filteredData.length) {
+          grid.innerHTML =
+            "<p style='text-align:center;font-size:20px;'>ยังไม่มีข้อมูลหรือไม่พบรายการที่ค้นหา</p>";
+          document.getElementById("pagination").innerHTML = "";
+          return;
+        }
+
+        const start = (currentPage - 1) * PER_PAGE;
+        const pageItems = filteredData.slice(start, start + PER_PAGE);
+
+        pageItems.forEach((item) => {
+          const img =
+            item.pics && item.pics.length
+              ? item.pics[0]
+              : "https://via.placeholder.com/350x200?text=No+Image";
+
+          const card = document.createElement("div");
+          card.className = "card";
+          card.onclick = () => openModal(item);
+
+          card.innerHTML = `
+            <img src="${img}" class="thumb">
+            <div class="title">${item.title || "-"}</div>
+            <div class="meta">วันที่: ${item.workDate || "-"}</div>
+            <div class="meta">ตัวชี้วัด: ${item.indicator || "-"}</div>
+          `;
+          grid.appendChild(card);
+        });
+
+        renderPagination();
+      }
+
+      function renderPagination() {
+        const totalPages = Math.ceil(filteredData.length / PER_PAGE);
+        const box = document.getElementById("pagination");
+        box.innerHTML = "";
+
+        if (totalPages <= 1) return;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          if (i === currentPage) btn.classList.add("active");
+          btn.onclick = () => {
+            currentPage = i;
+            render();
+          };
+          box.appendChild(btn);
+        }
+      }
+
+      function openModal(item) {
+        currentItem = item;
+        document.getElementById("modal").style.display = "flex";
+        document.getElementById("m_title").textContent = item.title || "-";
+        document.getElementById("m_indicator").textContent =
+          "ตัวชี้วัด: " + (item.indicator || "-");
+        document.getElementById("m_date").textContent =
+          "วันที่ดำเนินงาน: " + (item.workDate || "-");
+        document.getElementById("m_detail").textContent =
+          "รายละเอียด: " + (item.detail || "-");
+
+        const urlBox = document.getElementById("m_url");
+        if (item.url) {
+          urlBox.innerHTML = `ลิงก์ผลงาน: <a href="${item.url}" target="_blank">${item.url}</a>`;
+        } else {
+          urlBox.innerHTML = "";
+        }
+
+        const gal = document.getElementById("m_gallery");
+        gal.innerHTML = "";
+        (item.pics || []).forEach((p) => {
+          const img = document.createElement("img");
+          img.src = p;
+          img.onclick = () => window.open(p, "_blank");
+          gal.appendChild(img);
+        });
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      function goReportFromModal() {
+        if (!currentItem) return;
+        localStorage.setItem("REPORT_ITEM", JSON.stringify(currentItem));
+        location.href = "report.html";
+      }
+
+      // Suggest 5 อันดับชื่องานที่พบบ่อย
+      function buildSuggest() {
+        const titles = {};
+        allData.forEach((i) => {
+          if (!i.title) return;
+          titles[i.title] = (titles[i.title] || 0) + 1;
+        });
+
+        const arr = Object.entries(titles)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([t]) => t);
+
+        const box = document.getElementById("suggestBox");
+        box.innerHTML = "";
+
+        arr.forEach((t) => {
+          const span = document.createElement("span");
+          span.className = "suggest-item";
+          span.textContent = t;
+          span.onclick = () => {
+            document.getElementById("searchInput").value = t;
+            applyFilter();
+          };
+          box.appendChild(span);
+        });
+      }
+
+      document.getElementById("searchInput").addEventListener("input", applyFilter);
+      document.getElementById("indicatorFilter").addEventListener("change", applyFilter);
+
+      loadData();
+    </script>
+  </body>
+</html>
 
