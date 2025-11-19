@@ -2,9 +2,12 @@
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <title>SMARTWORK – รายการผลงานทั้งหมด ฺBy..JES</title>
+    <title>SMARTWORK – รายการผลงานทั้งหมด</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -202,22 +205,35 @@
   </head>
 
   <body>
-    <!-- TOP PROFILE BAR -->
+    <script>
+      /* ===============================  
+         ใช้ URL Web App ตัวล่าสุด
+      ================================ */
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
+    </script>
+
     <div class="topbar">
       <div class="profile">
-        <img id="avatarProfile" src="https://via.placeholder.com/60x60?text=Avatar" />
+        <img
+          id="avatarProfile"
+          src="https://via.placeholder.com/60x60?text=Avatar"
+          alt="avatar"
+        />
         <div class="profile-info" id="profileInfo"></div>
       </div>
-
       <div class="title-block">
-        <h2>รายการผลงานทั้งหมด (SMARTWORK) by JES</h2>
+        <h2>รายการผลงานทั้งหมด (SMARTWORK)</h2>
         <div class="note">ดึงข้อมูลจาก Google Sheet ผ่าน Google Apps Script</div>
       </div>
     </div>
 
-    <!-- FILTER BAR -->
     <div class="filter-bar">
-      <input type="text" id="searchInput" placeholder="ค้นหาจากชื่อกิจกรรม/รายละเอียด/ลิงก์..." />
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="ค้นหาจากชื่อกิจกรรม/รายละเอียด/ลิงก์..."
+      />
       <select id="indicatorFilter">
         <option value="">— ตัวชี้วัดทั้งหมด —</option>
         <option value="1)">1) จัดการเรียนรู้ตามหลักสูตร</option>
@@ -225,20 +241,28 @@
         <option value="3)">3) นิเทศ กำกับ ติดตาม</option>
         <option value="4)">4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย</option>
       </select>
-      <button onclick="location.href='form.html'"
-        style="font-size: 18px; border-radius: 8px; border: none; background: #0a7b34; color: #fff; cursor: pointer;">
+      <button
+        onclick="location.href='form.html'"
+        style="
+          font-size: 18px;
+          border-radius: 8px;
+          border: none;
+          background: #0a7b34;
+          color: #fff;
+          cursor: pointer;
+        "
+      >
         + บันทึกผลงานใหม่
       </button>
     </div>
 
     <div class="suggest-box" id="suggestBox"></div>
 
-    <!-- GRID -->
     <div id="grid" class="grid"></div>
 
     <div class="pagination" id="pagination"></div>
 
-    <!-- MODAL -->
+    <!-- Modal -->
     <div id="modal" class="modal-bg">
       <div class="modal-box">
         <button class="closeBtn" onclick="closeModal()">ปิด</button>
@@ -250,23 +274,22 @@
         <div id="m_gallery" class="gallery"></div>
 
         <div class="modal-footer-btns">
-          <button class="btn-report" onclick="goReportFromModal()">ออกบันทึกข้อความจากงานนี้</button>
+          <button class="btn-report" onclick="goReportFromModal()">
+            ออกบันทึกข้อความจากงานนี้
+          </button>
           <button class="btn-back" onclick="closeModal()">ปิดหน้าต่าง</button>
         </div>
       </div>
     </div>
 
-    <footer>SMARTWORK – Personal Portfolio &amp; Report System</footer>
+    <footer>SMARTWORK – Personal Portfolio & Report System</footer>
 
     <script>
-      /* URL ของ Web App (proxy รูป + API ทั้งหมด) */
-      const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
-
+      // อ่าน Config
       const cfgText = localStorage.getItem("SMARTWORK_CONFIG") || "{}";
       const cfg = JSON.parse(cfgText);
 
-      // PROFILE
+      // แสดงโปรไฟล์
       const profileInfo = document.getElementById("profileInfo");
       profileInfo.innerHTML =
         "<strong>" +
@@ -298,27 +321,6 @@
         } catch (err) {
           Swal.fire("ผิดพลาด", "โหลดข้อมูลไม่สำเร็จ", "error");
         }
-      }
-
-      function applyFilter() {
-        const q = document.getElementById("searchInput").value.toLowerCase().trim();
-        const ind = document.getElementById("indicatorFilter").value;
-
-        filteredData = allData.filter((item) => {
-          let ok = true;
-          if (q) {
-            const text =
-              (item.title || "") + " " + (item.detail || "") + " " + (item.url || "");
-            if (!text.toLowerCase().includes(q)) ok = false;
-          }
-          if (ind) {
-            if (!item.indicator || !item.indicator.startsWith(ind)) ok = false;
-          }
-          return ok;
-        });
-
-        currentPage = 1;
-        render();
       }
 
       function render() {
@@ -361,7 +363,6 @@
         const totalPages = Math.ceil(filteredData.length / PER_PAGE);
         const box = document.getElementById("pagination");
         box.innerHTML = "";
-
         if (totalPages <= 1) return;
 
         for (let i = 1; i <= totalPages; i++) {
@@ -388,11 +389,9 @@
           "รายละเอียด: " + (item.detail || "-");
 
         const urlBox = document.getElementById("m_url");
-        if (item.url) {
-          urlBox.innerHTML = `ลิงก์ผลงาน: <a href="${item.url}" target="_blank">${item.url}</a>`;
-        } else {
-          urlBox.innerHTML = "";
-        }
+        urlBox.innerHTML = item.url
+          ? `ลิงก์ผลงาน: <a href="${item.url}" target="_blank">${item.url}</a>`
+          : "";
 
         const gal = document.getElementById("m_gallery");
         gal.innerHTML = "";
@@ -414,22 +413,19 @@
         location.href = "report.html";
       }
 
-      // Suggest 5 อันดับชื่องานที่พบบ่อย
+      // Suggest คำที่ใช้บ่อย
       function buildSuggest() {
         const titles = {};
         allData.forEach((i) => {
           if (!i.title) return;
           titles[i.title] = (titles[i.title] || 0) + 1;
         });
-
         const arr = Object.entries(titles)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 5)
           .map(([t]) => t);
-
         const box = document.getElementById("suggestBox");
         box.innerHTML = "";
-
         arr.forEach((t) => {
           const span = document.createElement("span");
           span.className = "suggest-item";
@@ -442,8 +438,39 @@
         });
       }
 
-      document.getElementById("searchInput").addEventListener("input", applyFilter);
-      document.getElementById("indicatorFilter").addEventListener("change", applyFilter);
+      function applyFilter() {
+        const q = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+        const ind = document.getElementById("indicatorFilter").value;
+
+        filteredData = allData.filter((item) => {
+          let ok = true;
+          if (q) {
+            const text =
+              (item.title || "") +
+              " " +
+              (item.detail || "") +
+              " " +
+              (item.url || "");
+            if (!text.toLowerCase().includes(q)) ok = false;
+          }
+          if (ind) {
+            if (!item.indicator || !item.indicator.startsWith(ind)) ok = false;
+          }
+          return ok;
+        });
+        currentPage = 1;
+        render();
+      }
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", applyFilter);
+      document
+        .getElementById("indicatorFilter")
+        .addEventListener("change", applyFilter);
 
       loadData();
     </script>
