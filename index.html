@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <title>SMARTWORK – รายการผลงานทั้งหมด</title>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -203,30 +200,24 @@
       }
     </style>
   </head>
+
   <body>
+    <!-- TOP PROFILE BAR -->
     <div class="topbar">
       <div class="profile">
-        <img
-          id="avatarProfile"
-          src="https://via.placeholder.com/60x60?text=Avatar"
-          alt="avatar"
-        />
+        <img id="avatarProfile" src="https://via.placeholder.com/60x60?text=Avatar" />
         <div class="profile-info" id="profileInfo"></div>
       </div>
+
       <div class="title-block">
         <h2>รายการผลงานทั้งหมด (SMARTWORK)</h2>
-        <div class="note">
-          ดึงข้อมูลจาก Google Sheet ผ่าน Google Apps Script
-        </div>
+        <div class="note">ดึงข้อมูลจาก Google Sheet ผ่าน Google Apps Script</div>
       </div>
     </div>
 
+    <!-- FILTER BAR -->
     <div class="filter-bar">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="ค้นหาจากชื่อกิจกรรม/รายละเอียด/ลิงก์..."
-      />
+      <input type="text" id="searchInput" placeholder="ค้นหาจากชื่อกิจกรรม/รายละเอียด/ลิงก์..." />
       <select id="indicatorFilter">
         <option value="">— ตัวชี้วัดทั้งหมด —</option>
         <option value="1)">1) จัดการเรียนรู้ตามหลักสูตร</option>
@@ -234,27 +225,20 @@
         <option value="3)">3) นิเทศ กำกับ ติดตาม</option>
         <option value="4)">4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย</option>
       </select>
-      <button
-        onclick="location.href='form.html'"
-        style="
-          font-size: 18px;
-          border-radius: 8px;
-          border: none;
-          background: #0a7b34;
-          color: #fff;
-          cursor: pointer;
-        "
-      >
+      <button onclick="location.href='form.html'"
+        style="font-size: 18px; border-radius: 8px; border: none; background: #0a7b34; color: #fff; cursor: pointer;">
         + บันทึกผลงานใหม่
       </button>
     </div>
 
     <div class="suggest-box" id="suggestBox"></div>
 
+    <!-- GRID -->
     <div id="grid" class="grid"></div>
 
     <div class="pagination" id="pagination"></div>
 
+    <!-- MODAL -->
     <div id="modal" class="modal-bg">
       <div class="modal-box">
         <button class="closeBtn" onclick="closeModal()">ปิด</button>
@@ -264,10 +248,9 @@
         <p id="m_detail"></p>
         <p id="m_url"></p>
         <div id="m_gallery" class="gallery"></div>
+
         <div class="modal-footer-btns">
-          <button class="btn-report" onclick="goReportFromModal()">
-            ออกบันทึกข้อความจากงานนี้
-          </button>
+          <button class="btn-report" onclick="goReportFromModal()">ออกบันทึกข้อความจากงานนี้</button>
           <button class="btn-back" onclick="closeModal()">ปิดหน้าต่าง</button>
         </div>
       </div>
@@ -276,13 +259,14 @@
     <footer>SMARTWORK – Personal Portfolio &amp; Report System</footer>
 
     <script>
-      const API_URL =
-  "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
+      /* URL ของ Web App (proxy รูป + API ทั้งหมด) */
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
 
       const cfgText = localStorage.getItem("SMARTWORK_CONFIG") || "{}";
       const cfg = JSON.parse(cfgText);
 
-      // แสดงโปรไฟล์บนมุมซ้าย
+      // PROFILE
       const profileInfo = document.getElementById("profileInfo");
       profileInfo.innerHTML =
         "<strong>" +
@@ -305,7 +289,7 @@
 
       async function loadData() {
         try {
-          const res = await fetch(API_URL);
+          const res = await fetch(SCRIPT_URL);
           const data = await res.json();
           allData = data || [];
           filteredData = allData.slice();
@@ -317,21 +301,14 @@
       }
 
       function applyFilter() {
-        const q = document
-          .getElementById("searchInput")
-          .value.toLowerCase()
-          .trim();
+        const q = document.getElementById("searchInput").value.toLowerCase().trim();
         const ind = document.getElementById("indicatorFilter").value;
 
         filteredData = allData.filter((item) => {
           let ok = true;
           if (q) {
             const text =
-              (item.title || "") +
-              " " +
-              (item.detail || "") +
-              " " +
-              (item.url || "");
+              (item.title || "") + " " + (item.detail || "") + " " + (item.url || "");
             if (!text.toLowerCase().includes(q)) ok = false;
           }
           if (ind) {
@@ -339,6 +316,7 @@
           }
           return ok;
         });
+
         currentPage = 1;
         render();
       }
@@ -383,6 +361,7 @@
         const totalPages = Math.ceil(filteredData.length / PER_PAGE);
         const box = document.getElementById("pagination");
         box.innerHTML = "";
+
         if (totalPages <= 1) return;
 
         for (let i = 1; i <= totalPages; i++) {
@@ -435,19 +414,22 @@
         location.href = "report.html";
       }
 
-      // Suggest 5 อันจากชื่องานที่ใช้งานบ่อย
+      // Suggest 5 อันดับชื่องานที่พบบ่อย
       function buildSuggest() {
         const titles = {};
         allData.forEach((i) => {
           if (!i.title) return;
           titles[i.title] = (titles[i.title] || 0) + 1;
         });
+
         const arr = Object.entries(titles)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 5)
           .map(([t]) => t);
+
         const box = document.getElementById("suggestBox");
         box.innerHTML = "";
+
         arr.forEach((t) => {
           const span = document.createElement("span");
           span.className = "suggest-item";
@@ -460,12 +442,8 @@
         });
       }
 
-      document
-        .getElementById("searchInput")
-        .addEventListener("input", applyFilter);
-      document
-        .getElementById("indicatorFilter")
-        .addEventListener("change", applyFilter);
+      document.getElementById("searchInput").addEventListener("input", applyFilter);
+      document.getElementById("indicatorFilter").addEventListener("change", applyFilter);
 
       loadData();
     </script>
