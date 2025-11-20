@@ -10,6 +10,9 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- โหลด SCRIPT_URL (ตัวเดียวทั้งระบบ) -->
+    <script src="config.js"></script>
+
     <style>
       body {
         font-family: "TH Sarabun New", "Sarabun", sans-serif;
@@ -29,19 +32,16 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
       }
       .avatar-small {
         width: 60px;
         height: 60px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid #ccc;
       }
       h2 {
+        margin: 0;
         text-align: center;
-        margin-top: 0;
-        font-size: 26px;
       }
       label {
         font-size: 18px;
@@ -52,76 +52,59 @@
       textarea {
         width: 100%;
         padding: 8px 10px;
-        margin: 5px 0 12px 0;
         font-size: 18px;
         border-radius: 8px;
         border: 1px solid #bbb;
-      }
-      input[disabled] {
-        background: #eee;
+        margin-bottom: 12px;
       }
       textarea {
         height: 130px;
-        resize: vertical;
       }
       button {
         width: 100%;
         padding: 12px;
         font-size: 20px;
-        border: none;
         border-radius: 8px;
+        border: none;
         cursor: pointer;
-        margin-top: 10px;
+        margin-top: 8px;
       }
       #submitBtn {
         background: #1e4bb8;
-        color: #fff;
-      }
-      #clearBtn {
-        background: #555;
-        color: #fff;
+        color: white;
       }
       #navIndex {
         background: #0a7b34;
-        color: #fff;
+        color: white;
       }
       #navReport {
-        background: #a35700;
-        color: #fff;
+        background: #8a5300;
+        color: white;
       }
-
       .preview-row {
         display: flex;
-        flex-wrap: wrap;
         gap: 10px;
+        flex-wrap: wrap;
       }
       .preview-row img {
         width: 120px;
         height: 90px;
         object-fit: cover;
         border-radius: 8px;
-        border: 1px solid #aaa;
-      }
-      .note {
-        font-size: 15px;
-        color: #555;
       }
     </style>
   </head>
+
   <body>
     <div class="container">
       <div class="header-row">
         <div>
           <h2>บันทึกผลงาน (SMARTWORK)</h2>
-          <div class="note">
-            * บันทึกผลงานตามภารกิจประจำวัน / รายเดือน เพื่อใช้ประกอบการประเมิน
-          </div>
         </div>
         <img
           id="avatarHeader"
           class="avatar-small"
           src="https://via.placeholder.com/60x60?text=Avatar"
-          alt="avatar"
         />
       </div>
 
@@ -138,110 +121,85 @@
         <label>วันที่ของกิจกรรม</label>
         <input type="date" id="workDate" required />
 
-        <label>ชื่องาน / รายการกิจกรรม</label>
+        <label>ชื่องาน</label>
         <input id="title" required />
 
-        <label>รายละเอียดงาน (บรรยาย)</label>
+        <label>รายละเอียดงาน</label>
         <textarea id="detail" required></textarea>
 
         <label>ตัวชี้วัด</label>
         <select id="indicator" required>
-          <option value="">— เลือกตัวชี้วัด —</option>
-          <option value="1) จัดการเรียนรู้ตามหลักสูตร">
-            1) จัดการเรียนรู้ตามหลักสูตร
-          </option>
-          <option value="2) ส่งเสริมสนับสนุนการเรียนรู้">
-            2) ส่งเสริมสนับสนุนการเรียนรู้
-          </option>
+          <option value="">— เลือก —</option>
+          <option value="1) จัดการเรียนรู้ตามหลักสูตร">1) จัดการเรียนรู้ตามหลักสูตร</option>
+          <option value="2) ส่งเสริมสนับสนุนการเรียนรู้">2) ส่งเสริมสนับสนุนการเรียนรู้</option>
           <option value="3) นิเทศ กำกับ ติดตาม">3) นิเทศ กำกับ ติดตาม</option>
-          <option value="4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย">
-            4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย
-          </option>
+          <option value="4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย">4) ปฏิบัติงานอื่นตามที่ได้รับมอบหมาย</option>
         </select>
 
         <label>ลิงก์ผลงาน (ถ้ามี)</label>
-        <input type="url" id="url" placeholder="ไม่บังคับกรอก" />
+        <input id="url" placeholder="ไม่บังคับ" />
 
-        <label>เลือกรูปภาพ 1–6 รูป</label>
+        <label>เลือกรูปภาพ (สูงสุด 6 รูป)</label>
         <input type="file" id="images" accept="image/*" multiple />
         <div id="preview" class="preview-row"></div>
 
-        <button type="button" id="submitBtn">บันทึกผลงาน</button>
-        <button type="button" id="clearBtn">ล้างข้อมูล</button>
-        <button type="button" id="navIndex">ดูรายการผลงานทั้งหมด</button>
-        <button type="button" id="navReport">ออกบันทึกข้อความ (Report)</button>
+        <button id="submitBtn">บันทึกผลงาน</button>
+        <button id="navIndex" type="button">ดูรายการผลงาน</button>
+        <button id="navReport" type="button">ออกบันทึกข้อความ</button>
       </form>
     </div>
 
     <script>
-      // === URL Apps Script ของพี่ (gmail ส่วนตัว) ===
-     const API_URL =
-  "https://script.google.com/macros/s/AKfycbydlfrI9yERCaTPY-qxlvccD_DdKpZmlKWrAgsOl6iGCqbZfBla-E32bNTB2PfObe8-mw/exec";
-      const cfgText = localStorage.getItem("SMARTWORK_CONFIG");
-      if (!cfgText) {
-        Swal.fire(
-          "ยังไม่ได้ตั้งค่าระบบ",
-          "โปรดตั้งค่าที่หน้า config.html ก่อน",
-          "warning"
-        ).then(() => (location.href = "config.html"));
-      }
-      const cfg = cfgText ? JSON.parse(cfgText) : {};
+      // โหลด Config ผู้ใช้
+      const cfg = JSON.parse(localStorage.getItem("SMARTWORK_CONFIG") || "{}");
 
-      // เติมข้อมูลส่วนตัว
-      document.getElementById("fullname").value = cfg.fullname || "";
-      document.getElementById("position").value = cfg.position || "";
-      document.getElementById("unit").value =
-        "ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอ" +
-        (cfg.district ? cfg.district : "") +
-        " (" +
-        "สกร.อ." +
-        (cfg.district ? cfg.district : "") +
-        ") " +
-        "สำนักงานส่งเสริมการเรียนรู้ประจำจังหวัดศรีสะเกษ";
-
-      if (cfg.avatarDataUrl) {
-        document.getElementById("avatarHeader").src = cfg.avatarDataUrl;
+      if (!cfg.fullname) {
+        Swal.fire("ยังไม่ได้ตั้งค่า", "โปรดตั้งค่าที่ config.html", "warning");
       }
 
-      // preview รูป
-      images.addEventListener("change", function () {
-        const box = document.getElementById("preview");
-        box.innerHTML = "";
-        [...this.files].forEach((file) => {
+      // แสดงข้อมูล
+      fullname.value = cfg.fullname || "";
+      position.value = cfg.position || "";
+      unit.value = "สกร.อ." + (cfg.district || "") + " สกร.จังหวัดศรีสะเกษ";
+
+      if (cfg.avatarDataUrl) avatarHeader.src = cfg.avatarDataUrl;
+
+      // Preview รูป
+      images.onchange = () => {
+        preview.innerHTML = "";
+        [...images.files].forEach((file) => {
           const reader = new FileReader();
           reader.onload = (e) => {
             const img = document.createElement("img");
             img.src = e.target.result;
-            box.appendChild(img);
+            preview.appendChild(img);
           };
           reader.readAsDataURL(file);
         });
-      });
+      };
 
-      // resize image
+      // Resize
       function resizeImage(file) {
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
-              const MAX = 1280;
               let w = img.width;
               let h = img.height;
+              const MAX = 1280;
               if (w > h && w > MAX) {
-                h = h * (MAX / w);
+                h *= MAX / w;
                 w = MAX;
               } else if (h > MAX) {
-                w = w * (MAX / h);
+                w *= MAX / h;
                 h = MAX;
               }
               const canvas = document.createElement("canvas");
               canvas.width = w;
               canvas.height = h;
-              const ctx = canvas.getContext("2d");
-              ctx.drawImage(img, 0, 0, w, h);
-              const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
-              resolve(dataUrl);
+              canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+              resolve(canvas.toDataURL("image/jpeg", 0.85));
             };
             img.src = e.target.result;
           };
@@ -249,102 +207,62 @@
         });
       }
 
-      // submit
-      document
-        .getElementById("submitBtn")
-        .addEventListener("click", async () => {
-          if (!cfg.fullname) {
-            Swal.fire("ยังไม่ได้ตั้งค่าระบบ", "", "warning");
-            return;
-          }
+      // Submit
+      submitBtn.onclick = async () => {
+        if (!workDate.value || !title.value || !detail.value || !indicator.value) {
+          Swal.fire("กรุณากรอกข้อมูลให้ครบ", "", "warning");
+          return;
+        }
 
-          if (
-            !workDate.value ||
-            !title.value.trim() ||
-            !detail.value.trim() ||
-            !indicator.value
-          ) {
-            Swal.fire("กรุณากรอกข้อมูลให้ครบ", "", "warning");
-            return;
-          }
+        Swal.fire({ title: "กำลังบันทึก...", didOpen: () => Swal.showLoading() });
 
-          Swal.fire({
-            title: "กำลังบันทึก...",
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading(),
+        const resized = [];
+        for (const f of [...images.files].slice(0, 6)) {
+          resized.push(await resizeImage(f));
+        }
+
+        const payload = {
+          name: cfg.fullname,
+          pos: cfg.position,
+          unit: "สกร.อ." + cfg.district,
+          workDate: workDate.value,
+          title: title.value.trim(),
+          detail: detail.value.trim(),
+          indicator: indicator.value,
+          url: url.value.trim(),
+          pics: resized,
+        };
+
+        try {
+          const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload),
           });
+          const json = await res.json();
 
-          const files = [...images.files].slice(0, 6);
-          const resized = [];
-          for (const f of files) {
-            resized.push(await resizeImage(f));
+          if (json.status === "OK") {
+            // เก็บรูป proxy ไว้ใช้กับ report
+            const picsProxy = json.pics.map(
+              (id) => SCRIPT_URL + "?mode=image&id=" + id
+            );
+
+            localStorage.setItem(
+              "LATEST_WORK",
+              JSON.stringify({ ...payload, pics: picsProxy })
+            );
+
+            Swal.fire("บันทึกสำเร็จ", "", "success");
+          } else {
+            Swal.fire("ผิดพลาด", json.message, "error");
           }
-
-          const payload = {
-            name: cfg.fullname,
-            pos: cfg.position,
-            unit: "สกร.อ." + (cfg.district || ""),
-            district: cfg.district || "",
-            workDate: workDate.value,
-            title: title.value.trim(),
-            detail: detail.value.trim(),
-            indicator: indicator.value,
-            url: url.value.trim(),
-            pics: resized,
-          };
-
-          try {
-            const res = await fetch(API_URL, {
-              method: "POST",
-              body: JSON.stringify(payload),
-            });
-            const json = await res.json();
-            if (json.status === "OK") {
-              // เก็บงานล่าสุดและรูป 2 รูปไว้ใช้ในรายงาน
-              localStorage.setItem(
-                "LATEST_WORK",
-                JSON.stringify({
-                  ...payload,
-                  pics: json.pics || [],
-                })
-              );
-              Swal.fire("บันทึกสำเร็จ", "", "success").then(() => {
-                workDate.value = "";
-                title.value = "";
-                detail.value = "";
-                indicator.value = "";
-                url.value = "";
-                images.value = "";
-                preview.innerHTML = "";
-              });
-            } else {
-              Swal.fire("ผิดพลาด", json.message || "บันทึกไม่สำเร็จ", "error");
-            }
-          } catch (err) {
-            Swal.fire("ผิดพลาด", err.message, "error");
-          }
-        });
-
-      // ล้างฟอร์ม
-      document.getElementById("clearBtn").onclick = () => {
-        workDate.value = "";
-        title.value = "";
-        detail.value = "";
-        indicator.value = "";
-        url.value = "";
-        images.value = "";
-        preview.innerHTML = "";
+        } catch (err) {
+          Swal.fire("ผิดพลาด", err.message, "error");
+        }
       };
 
-      // ไป index
-      document.getElementById("navIndex").onclick = () => {
-        location.href = "index.html";
-      };
-
-      // ไป report
-      document.getElementById("navReport").onclick = () => {
-        location.href = "report.html";
-      };
+      // ไปหน้า index
+      navIndex.onclick = () => (location.href = "index.html");
+      navReport.onclick = () => (location.href = "report.html");
     </script>
   </body>
 </html>
